@@ -1,0 +1,944 @@
+/* Coordinates share the illustration's entire normalized rectangle. */
+.screen-map .map {
+  background-size: 100% 100%;
+}
+.screen-map .map-level-scroll {
+  inset: 0;
+}
+.screen-map .map-level-scroll .path {
+  inset: 0;
+  min-height: 0;
+  height: 100%;
+}
+.screen-map .map-level-scroll .path .map-node[data-completed="true"] {
+  background: linear-gradient(#64eb8a, #16b956 55%, #07883c) !important;
+  border-color: #c6ff9d !important;
+  box-shadow:
+    inset 0 2px #c0ffd4,
+    0 3px #075c2c !important;
+  color: white;
+}
+.screen-map
+  .map-level-scroll
+  .path
+  .map-node[data-completed="true"].selected-node {
+  outline: 3px solid #ffe66c;
+  outline-offset: 3px;
+}
+.screen-map .map-level-scroll .path .map-node.elite[data-completed="true"] {
+  background: linear-gradient(180deg, #a56bf6, #5121a3) !important;
+  border-color: #ffd754 !important;
+  box-shadow:
+    0 4px 0 #361271,
+    0 0 14px #cf8cff !important;
+}
+.screen-map .map-level-scroll .path .map-node.boss[data-completed="true"] {
+  background: linear-gradient(180deg, #d7473d, #8f1422) !important;
+  border-color: #ffbf52 !important;
+  box-shadow:
+    0 4px 0 #68101d,
+    0 0 16px #ff5c44 !important;
+}
+.screen-map .map-level-scroll .path .map-node.nextWorldNode,
+.screen-map .map-level-scroll .path .map-node.previousWorldNode {
+  width: 26%;
+  height: 24%;
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  top: 17% !important;
+  left: 85% !important;
+  animation: none;
+  overflow: visible;
+}
+.screen-map .map-level-scroll .path .map-node.previousWorldNode {
+  top: 81% !important;
+  left: 15% !important;
+}
+.screen-map .island-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 5px 3px #16375166);
+}
+.screen-map .world-island-copy {
+  position: absolute;
+  top: 60%;
+  left: 0;
+  width: 100%;
+  padding: 4px 2px;
+  background: linear-gradient(#2877ad, #123e69);
+  border: 1px solid #b9eaff;
+  border-radius: 9px;
+  white-space: normal;
+}
+.screen-map .world-island-copy strong {
+  font-size: 10px;
+}
+.screen-map .world-island-copy b,
+.screen-map .world-island-copy small {
+  font-size: 8px !important;
+}
+.screen-map .world-island-lock {
+  top: 30%;
+  right: 35%;
+  font-size: 22px;
+}
+.transition-to-green {
+  --island-ground: #78d76c;
+  --island-mountain: #378b57;
+}
+.transition-to-dark {
+  --island-ground: #8866b4;
+  --island-mountain: #473365;
+}
+.transition-to-wasteland {
+  --island-ground: #ecc080;
+  --island-mountain: #a97743;
+}
+.transition-to-lava {
+  --island-ground: #ff742d;
+  --island-mountain: #482c38;
+}
+@media (prefers-reduced-motion: reduce) {
+  .screen-map .map-node {
+    animation: none !important;
+  }
+}
+
+/* Approved Green Kingdom painting and controls share one full-screen rectangle. */
+.screen-map:has(.world-map-green) {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map:has(.world-map-green) .screen-frame {
+  isolation: isolate;
+}
+.screen-map .world-map-green.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-size: 100% 100%;
+  z-index: 0;
+}
+.screen-map .world-map-green .chapter {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+}
+.screen-map:has(.world-map-green) .map-topbar {
+  position: absolute;
+  inset: 4px 8px auto;
+  margin: 0;
+  height: 6%;
+  min-height: 34px;
+}
+.screen-map:has(.world-map-green) .map-level-profile {
+  min-width: 0;
+  width: 34%;
+  height: 100%;
+  min-height: 32px;
+}
+.screen-map:has(.world-map-green) .map-level-profile > span {
+  width: 30px;
+  height: 30px;
+  font-size: 23px;
+  flex-shrink: 0;
+}
+.screen-map:has(.world-map-green) .map-level-profile i {
+  width: 100%;
+}
+.screen-map:has(.world-map-green) .map-currencies {
+  min-width: 0;
+  width: 62%;
+  justify-content: flex-end;
+}
+.screen-map:has(.world-map-green) .map-currencies > span {
+  min-width: 0;
+  flex: 1;
+  padding-left: 4px;
+  padding-right: 24px;
+}
+.screen-map:has(.world-map-green) .map-currencies b {
+  font-size: 12px;
+}
+.screen-map:has(.world-map-green) .map-currencies i {
+  width: 25px;
+}
+.screen-map:has(.world-map-green) .screen-frame > .gamebutton {
+  position: absolute;
+  left: 14%;
+  bottom: 4%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+  font-size: clamp(22px, 6.5vw, 31px);
+}
+.screen-map .world-map-green .path .map-node.nextWorldNode {
+  left: 84% !important;
+  top: 15% !important;
+  width: 29%;
+  height: 20%;
+}
+.screen-map .world-map-green .nextWorldNode .island-art,
+.screen-map .world-map-green .nextWorldNode .world-island-copy {
+  display: none;
+}
+.screen-map .world-map-green .nextWorldNode .world-island-lock {
+  top: 14%;
+  right: 36%;
+}
+.screen-map .world-map-green .nextWorldNode:focus-visible {
+  outline: 3px solid #fff15c;
+  outline-offset: 0;
+  border-radius: 24px;
+}
+.screen-map
+  .world-map-green
+  .map-node:not(.nextWorldNode):not(.previousWorldNode) {
+  width: clamp(32px, 9vw, 40px);
+  height: clamp(27px, 7vw, 33px);
+}
+.screen-map .world-map-green .map-node.boss .node-badge {
+  top: -12px;
+}
+
+/* Frozen Lands uses the same reference-first composition: the painting is full-screen,
+   while level nodes and navigation remain live, accessible controls above it. */
+.screen-map:has(.world-map-ice) {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map:has(.world-map-ice) .screen-frame {
+  isolation: isolate;
+}
+.screen-map .world-map-ice.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-size: 100% 100%;
+  z-index: 0;
+}
+.screen-map .world-map-ice .chapter {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+}
+.screen-map:has(.world-map-ice) .map-topbar {
+  position: absolute;
+  inset: 4px 8px auto;
+  margin: 0;
+  height: 6%;
+  min-height: 34px;
+}
+.screen-map:has(.world-map-ice) .map-level-profile {
+  min-width: 0;
+  width: 34%;
+  height: 100%;
+  min-height: 32px;
+}
+.screen-map:has(.world-map-ice) .map-level-profile > span {
+  width: 30px;
+  height: 30px;
+  font-size: 23px;
+  flex-shrink: 0;
+}
+.screen-map:has(.world-map-ice) .map-level-profile i {
+  width: 100%;
+}
+.screen-map:has(.world-map-ice) .map-currencies {
+  min-width: 0;
+  width: 62%;
+  justify-content: flex-end;
+}
+.screen-map:has(.world-map-ice) .map-currencies > span {
+  min-width: 0;
+  flex: 1;
+  padding-left: 4px;
+  padding-right: 24px;
+}
+.screen-map:has(.world-map-ice) .map-currencies b {
+  font-size: 12px;
+}
+.screen-map:has(.world-map-ice) .map-currencies i {
+  width: 25px;
+}
+.screen-map:has(.world-map-ice) .screen-frame > .gamebutton {
+  position: absolute;
+  left: 14%;
+  bottom: 2.5%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+  font-size: clamp(22px, 6.5vw, 31px);
+}
+.screen-map
+  .world-map-ice
+  .map-node:not(.nextWorldNode):not(.previousWorldNode) {
+  width: clamp(32px, 9vw, 40px);
+  height: clamp(27px, 7vw, 33px);
+}
+.screen-map .world-map-ice .path .map-node.nextWorldNode {
+  left: 85% !important;
+  top: calc(13% + 50px) !important;
+  width: 29%;
+  height: 18%;
+}
+.screen-map .world-map-ice .path .map-node.previousWorldNode {
+  left: 17% !important;
+  top: 73% !important;
+  width: 34%;
+  height: 18%;
+}
+.screen-map .world-map-ice .nextWorldNode:focus-visible,
+.screen-map .world-map-ice .previousWorldNode:focus-visible {
+  outline: 3px solid #fff15c;
+  outline-offset: 0;
+  border-radius: 24px;
+}
+.screen-map .world-map-ice .transition-to-dark,
+.screen-map .world-map-ice .transition-to-green {
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+.screen-map .world-map-ice .transition-to-dark {
+  background-image: url("./assets/island-dark.webp") !important;
+}
+.screen-map .world-map-ice .transition-to-green {
+  background-image: url("./assets/island-green.webp") !important;
+}
+.screen-map .world-map-ice .transition-to-dark {
+  background-image: none !important;
+}
+.screen-map .world-map-ice .transition-to-dark:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+
+  display: block;
+  background: url("./assets/island-dark.webp") center/contain no-repeat;
+  pointer-events: none;
+}
+.screen-map .world-map-ice .transition-to-dark .world-island-copy {
+  z-index: 2;
+}
+.screen-map .world-map-ice .transition-to-dark .world-island-copy {
+  display: none;
+}
+.screen-map .world-map-ice .transition-to-dark .island-art,
+.screen-map .world-map-ice .transition-to-green .island-art {
+  display: none;
+}
+.screen-map .world-map-ice .transition-to-dark .world-island-copy,
+.screen-map .world-map-ice .transition-to-green .world-island-copy {
+  top: 63%;
+  z-index: 1;
+}
+.screen-map .world-map-ice .transition-to-green {
+  background-image: none !important;
+}
+.screen-map .world-map-ice .transition-to-green::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -8% -8% 18%;
+  display: block;
+  background: url("./assets/island-green.webp") center/contain no-repeat;
+  pointer-events: none;
+}
+.screen-map .world-map-ice .transition-to-green .world-island-copy {
+  display: none;
+}
+.screen-map .world-map-ice .transition-to-dark,
+.screen-map .world-map-ice .transition-to-green {
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+.screen-map .world-map-ice .transition-to-dark::after,
+.screen-map .world-map-ice .transition-to-green::after {
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.screen-map .world-map-ice .transition-to-dark .world-island-lock {
+  z-index: 2;
+  top: 17%;
+  right: 35%;
+}
+
+/* World transitions are live objects: locked worlds get a lock; unlocked worlds never do. */
+.screen-map .map-node.nextWorldNode,
+.screen-map .map-node.previousWorldNode {
+  animation: world-island-bob 2.7s ease-in-out infinite !important;
+  transform: translate(-50%, -50%);
+}
+.screen-map .map-node.previousWorldNode {
+  animation-delay: -1.2s !important;
+}
+.screen-map .map-node.world-transition-open .world-island-copy {
+  background: linear-gradient(#3bbaea, #12538f);
+  border-color: #c9f5ff;
+}
+.screen-map .map-node.world-transition-open .island-art {
+  filter: drop-shadow(0 6px 4px #0e426b88) drop-shadow(0 0 8px #9df5ff99);
+}
+.screen-map .map-node.world-transition-locked .island-art {
+  filter: grayscale(0.35) brightness(0.82) drop-shadow(0 5px 3px #16375166);
+}
+@keyframes world-island-bob {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-7px);
+  }
+}
+
+/* Green Kingdom previews the real Frozen Lands transition island. */
+.screen-map .world-map-green .nextWorldNode {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+.screen-map .world-map-green .path .map-node.nextWorldNode {
+  left: 85% !important;
+  top: calc(13% + 50px) !important;
+  width: 29%;
+  height: 18%;
+}
+.screen-map .world-map-green .nextWorldNode .island-art {
+  display: block;
+  width: 118%;
+  height: 118%;
+  margin: -9%;
+  object-fit: contain;
+  opacity: 0;
+  background: url('./assets/frozen-iceland.webp') center / contain no-repeat;
+  animation: frozen-island-appear 350ms ease-out forwards;
+}
+.screen-map .world-map-green .nextWorldNode .island-art > * {
+  display: none;
+}
+.screen-map .world-map-green .nextWorldNode .island-art {
+  opacity: 1;
+  animation: none;
+}
+@keyframes frozen-island-appear {
+  from { opacity: 0; transform: scale(0.86); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Dark Forest chapter: Wasteland ahead, Frozen Lands behind. */
+.screen-map .world-map-dark .nextWorldNode .island-art,
+.screen-map .world-map-dark .previousWorldNode .island-art {
+  display: block;
+  width: 118%;
+  height: 118%;
+  margin: -9%;
+  object-fit: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.screen-map .world-map-dark .nextWorldNode .island-art {
+  background-image: url('./assets/wasterland.webp');
+}
+.screen-map .world-map-dark .previousWorldNode .island-art {
+  background-image: url('./assets/frozen-iceland.webp');
+}
+.screen-map .world-map-dark .nextWorldNode .island-art > *,
+.screen-map .world-map-dark .previousWorldNode .island-art > * {
+  display: none;
+}
+
+/* The island artwork carries the chapter identity; hide only the helper captions. */
+.screen-map .world-island-copy > b,
+.screen-map .world-island-copy > strong,
+.screen-map .world-island-copy > small,
+.screen-map .map-node.nextWorldNode::after,
+.screen-map .map-node.previousWorldNode::after {
+  display: none !important;
+}
+
+.screen-map .world-map-dark .nextWorldNode .island-art,
+.screen-map .world-map-dark .previousWorldNode .island-art {
+  display: block !important;
+}
+.screen-map .world-map-dark .nextWorldNode,
+.screen-map .world-map-dark .previousWorldNode {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.screen-map .world-map-dark .path .nextWorldNode.transition-to-wasteland,
+.screen-map .world-map-dark .path .previousWorldNode.transition-to-ice {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.screen-map .world-map-dark .world-island-copy {
+  display: none !important;
+}
+
+/* Wasteland chapter: Lava Realm ahead, Dark Forest behind. */
+.screen-map .world-map-wasteland .nextWorldNode .island-art,
+.screen-map .world-map-wasteland .previousWorldNode .island-art {
+  display: block !important;
+  width: 118%;
+  height: 118%;
+  margin: -9%;
+  object-fit: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.screen-map .world-map-wasteland .nextWorldNode .island-art {
+  background-image: url('./assets/lava realm.webp');
+}
+.screen-map .world-map-wasteland .previousWorldNode .island-art {
+  background-image: url('./assets/island-dark.webp');
+}
+.screen-map .world-map-wasteland .nextWorldNode .island-art > *,
+.screen-map .world-map-wasteland .previousWorldNode .island-art > * {
+  display: none;
+}
+.screen-map .world-map-wasteland .world-island-copy {
+  display: none !important;
+}
+.screen-map .world-map-wasteland .path .nextWorldNode.transition-to-lava,
+.screen-map .world-map-wasteland .path .previousWorldNode.transition-to-dark {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Lava Realm chapter returns to Wasteland through its lower island. */
+.screen-map .world-map-lava .previousWorldNode .island-art {
+  display: block !important;
+  width: 118%;
+  height: 118%;
+  margin: -9%;
+  object-fit: contain;
+  background: url('./assets/wasterland.webp') center / contain no-repeat;
+}
+.screen-map .world-map-lava .previousWorldNode .island-art > * {
+  display: none;
+}
+.screen-map .world-map-lava .world-island-copy {
+  display: none !important;
+}
+.screen-map .world-map-lava .path .previousWorldNode.transition-to-wasteland {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Frozen Lands chapter: Dark Forest ahead, Green Kingdom behind. */
+.screen-map .world-map-ice .nextWorldNode .island-art,
+.screen-map .world-map-ice .previousWorldNode .island-art {
+  display: block !important;
+  width: 118%;
+  height: 118%;
+  margin: -9%;
+  object-fit: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.screen-map .world-map-ice .nextWorldNode .island-art {
+  background-image: url('./assets/island-dark.webp');
+}
+.screen-map .world-map-ice .previousWorldNode .island-art {
+  background-image: url('./assets/island-green.webp');
+}
+.screen-map .world-map-ice .nextWorldNode .island-art > *,
+.screen-map .world-map-ice .previousWorldNode .island-art > * {
+  display: none;
+}
+.screen-map .world-map-ice .world-island-copy {
+  display: none !important;
+}
+.screen-map .world-map-ice .path .nextWorldNode.transition-to-dark,
+.screen-map .world-map-ice .path .previousWorldNode.transition-to-green {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+.screen-map .world-map-ice .nextWorldNode::before,
+.screen-map .world-map-ice .nextWorldNode::after,
+.screen-map .world-map-ice .previousWorldNode::before,
+.screen-map .world-map-ice .previousWorldNode::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Dark Forest follows the same full-screen chapter-map composition. */
+.screen-map:has(.world-map-dark) {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map .world-map-dark.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-size: 100% 100%;
+  z-index: 0;
+}
+.screen-map .world-map-dark .chapter {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+}
+.screen-map:has(.world-map-dark) .map-topbar {
+  position: absolute;
+  inset: 4px 8px auto;
+  margin: 0;
+  height: 6%;
+  min-height: 34px;
+  z-index: 5;
+}
+.screen-map:has(.world-map-dark) .screen-frame > .gamebutton {
+  position: absolute;
+  left: 14%;
+  bottom: 2.5%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+  font-size: clamp(22px, 6.5vw, 31px);
+  z-index: 6;
+}
+.screen-map .world-map-dark .map-node:not(.nextWorldNode):not(.previousWorldNode) {
+  width: clamp(32px, 9vw, 40px);
+  height: clamp(27px, 7vw, 33px);
+}
+.screen-map .world-map-dark .path .map-node.nextWorldNode {
+  left: 85% !important;
+  top: calc(13% + 50px) !important;
+  width: 29%;
+  height: 18%;
+}
+.screen-map .world-map-dark .path .map-node.previousWorldNode {
+  left: 17% !important;
+  top: 73% !important;
+  width: 34%;
+  height: 18%;
+}
+.screen-map:has(.world-map-dark) .map-level-profile {
+  min-width: 0;
+  width: 34%;
+  height: 100%;
+  min-height: 32px;
+}
+.screen-map:has(.world-map-dark) .map-level-profile > span {
+  width: 30px;
+  height: 30px;
+  font-size: 23px;
+  flex-shrink: 0;
+}
+.screen-map:has(.world-map-dark) .map-level-profile i {
+  width: 100%;
+}
+.screen-map:has(.world-map-dark) .map-currencies {
+  min-width: 0;
+  width: 62%;
+  justify-content: flex-end;
+}
+.screen-map:has(.world-map-dark) .map-currencies > span {
+  min-width: 0;
+  flex: 1;
+  padding-left: 4px;
+  padding-right: 24px;
+}
+.screen-map:has(.world-map-dark) .map-currencies b {
+  font-size: 12px;
+}
+.screen-map:has(.world-map-dark) .map-currencies i {
+  width: 25px;
+}
+.screen-map:has(.world-map-wasteland) .map-topbar,
+.screen-map:has(.world-map-lava) .map-topbar {
+  position: absolute;
+  inset: 4px 8px auto;
+  margin: 0;
+  height: 6%;
+  min-height: 34px;
+  z-index: 5;
+}
+.screen-map:has(.world-map-wasteland) .map-level-profile,
+.screen-map:has(.world-map-lava) .map-level-profile {
+  min-width: 0;
+  width: 34%;
+  height: 100%;
+  min-height: 32px;
+}
+.screen-map:has(.world-map-wasteland) .map-level-profile > span,
+.screen-map:has(.world-map-lava) .map-level-profile > span {
+  width: 30px;
+  height: 30px;
+  font-size: 23px;
+  flex-shrink: 0;
+}
+.screen-map:has(.world-map-wasteland) .map-level-profile i,
+.screen-map:has(.world-map-lava) .map-level-profile i {
+  width: 100%;
+}
+.screen-map:has(.world-map-wasteland) .map-currencies,
+.screen-map:has(.world-map-lava) .map-currencies {
+  min-width: 0;
+  width: 62%;
+  justify-content: flex-end;
+}
+.screen-map:has(.world-map-wasteland) .map-currencies > span,
+.screen-map:has(.world-map-lava) .map-currencies > span {
+  min-width: 0;
+  flex: 1;
+  padding-left: 4px;
+  padding-right: 24px;
+}
+.screen-map:has(.world-map-wasteland) .map-currencies b,
+.screen-map:has(.world-map-lava) .map-currencies b {
+  font-size: 12px;
+}
+.screen-map:has(.world-map-wasteland) .map-currencies i,
+.screen-map:has(.world-map-lava) .map-currencies i {
+  width: 25px;
+}
+.screen-map:has(.world-map-wasteland) {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map .world-map-wasteland.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-size: 100% 100%;
+  z-index: 0;
+}
+.screen-map .world-map-wasteland .chapter {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+}
+.screen-map .world-map-wasteland .map-node:not(.nextWorldNode):not(.previousWorldNode) {
+  width: clamp(32px, 9vw, 40px);
+  height: clamp(27px, 7vw, 33px);
+}
+.screen-map:has(.world-map-wasteland) .screen-frame > .gamebutton {
+  position: absolute;
+  left: 14%;
+  bottom: 2.5%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+  font-size: clamp(22px, 6.5vw, 31px);
+  z-index: 6;
+}
+.screen-map .world-map-wasteland .path .map-node.nextWorldNode {
+  left: 85% !important;
+  top: calc(13% + 50px) !important;
+  width: 29%;
+  height: 18%;
+}
+.screen-map .world-map-wasteland .path .map-node.previousWorldNode {
+  left: 17% !important;
+  top: 73% !important;
+  width: 34%;
+  height: 18%;
+}
+.screen-map:has(.world-map-lava) {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map .world-map-lava.map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-size: 100% 100%;
+  z-index: 0;
+}
+.screen-map .world-map-lava .chapter {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+}
+.screen-map .world-map-lava .map-node:not(.nextWorldNode):not(.previousWorldNode) {
+  width: clamp(32px, 9vw, 40px);
+  height: clamp(27px, 7vw, 33px);
+}
+.screen-map:has(.world-map-lava) .screen-frame > .gamebutton {
+  position: absolute;
+  left: 14%;
+  bottom: 2.5%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+  font-size: clamp(22px, 6.5vw, 31px);
+  z-index: 6;
+}
+.screen-map .world-map-lava .path .map-node.previousWorldNode {
+  left: 17% !important;
+  top: 73% !important;
+  width: 34%;
+  height: 18%;
+}
+
+/* Keep the non-green world maps aligned with Green Kingdom and extend their
+   own artwork into the safe-area bands above and below the live map. */
+.screen-map:has(.world-map-green),
+.screen-map:has(.world-map-ice),
+.screen-map:has(.world-map-dark),
+.screen-map:has(.world-map-wasteland),
+.screen-map:has(.world-map-lava) {
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.screen-map:has(.world-map-green) {
+  background-image: linear-gradient(180deg, #70d7ed33, #2caa6b55), url('./assets/map-green-reference.webp');
+}
+.screen-map:has(.world-map-ice) {
+  background-image: linear-gradient(180deg, #d9fbff22, #285d9b33), url('./assets/map-ice-reference.webp');
+}
+.screen-map:has(.world-map-dark) {
+  background-image: linear-gradient(180deg, #17123a22, #100b2933), url('./assets/map-dark.webp');
+}
+.screen-map:has(.world-map-wasteland) {
+  background-image: linear-gradient(180deg, #cc7e4d22, #38253a33), url('./assets/map-wasteland.webp');
+}
+.screen-map:has(.world-map-lava) {
+  background-image: linear-gradient(180deg, #7a263d22, #120e1d33), url('./assets/map-lava.webp');
+}
+.screen-map:has(.world-map-ice) .screen-frame > .gamebutton,
+.screen-map:has(.world-map-dark) .screen-frame > .gamebutton,
+.screen-map:has(.world-map-wasteland) .screen-frame > .gamebutton,
+.screen-map:has(.world-map-lava) .screen-frame > .gamebutton {
+  bottom: 4%;
+}
+
+/* Full-bleed fallback for Android WebViews: the map must begin at the top of
+   the scene even when :has() selectors are unavailable or delayed. */
+.screen-map {
+  padding: env(safe-area-inset-top) 0 calc(68px + env(safe-area-inset-bottom));
+}
+.screen-map .screen-frame {
+  position: relative;
+  overflow: hidden;
+}
+.screen-map .map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0 !important;
+  border-radius: 0;
+  background-position: center;
+  background-size: 100% 100%;
+}
+.screen-map .screen-frame > .gamebutton {
+  position: absolute;
+  z-index: 7;
+  left: 14%;
+  bottom: 4%;
+  width: 72%;
+  height: 9%;
+  min-height: 44px;
+  margin: 0;
+}
+.screen-map .screen-frame::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: clamp(104px, 22vw, 160px);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% -35%, #d7f7ff2b 0%, transparent 66%),
+    linear-gradient(180deg, #2b8cd52e 0%, #1d6cb91c 52%, transparent 100%);
+}
+
+/* All five campaign maps use the complete portrait canvas on Android. */
+@media (max-width: 599px) {
+  .app.screen-map {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: #071d3b;
+  }
+
+  .app.screen-map > .screen-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .app.screen-map .map {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background-position: center !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+  }
+}

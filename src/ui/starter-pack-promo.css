@@ -1,0 +1,37 @@
+.starter-promo{position:relative;isolation:isolate;overflow:hidden;width:100%;aspect-ratio:944 / 1680;border:1px solid #f5d46d;border-radius:26px;background:#061b3c;box-shadow:inset 0 1px #fff8,0 0 0 2px #143b70aa,0 16px 32px #001229aa,0 0 34px #4bcfff22;color:#fff}
+.starter-promo-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none;user-select:none}
+.starter-promo-art-overlay{position:absolute;inset:0;z-index:1}
+.starter-promo-art-overlay:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#06183412 0%,transparent 49%,#06193314 72%,#03142fd9 100%);pointer-events:none}
+.starter-promo-topline{position:absolute;z-index:2;top:5.7%;left:6.5%;right:6.5%;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:clamp(8px,2.1vw,12px);letter-spacing:1.45px;font-weight:900;color:#b9efff;text-shadow:0 2px #06152f}
+.starter-promo-topline b{padding:4px 8px;border:1px solid #fff0a2;border-radius:999px;background:linear-gradient(135deg,#edbd35,#9d4f0c);color:#fff6bc;font-size:clamp(8px,2.1vw,12px);letter-spacing:.5px;box-shadow:inset 0 1px #fff9,0 3px 10px #0007,0 0 12px #ffcf4c77}
+.starter-promo-heading{position:absolute;z-index:2;top:10.8%;left:8%;right:8%;text-align:center;text-shadow:0 2px #06152f}
+.starter-promo-heading small{display:block;color:#ffe170;font-size:clamp(8px,2vw,12px);letter-spacing:2px;font-weight:900}
+.starter-promo-heading h3{margin:2px 0 0;color:#fff;font-size:clamp(18px,5.3vw,30px);line-height:1;text-shadow:0 3px #04152f,0 0 16px #7fdfff66}
+.starter-promo-heading p{margin:4px 0 0;color:#c5ecff;font-size:clamp(8px,2.2vw,13px)}
+.starter-promo-skin-copy{position:absolute;z-index:2;top:53.6%;left:6%;width:43%;display:grid;gap:3px;justify-items:center;text-align:center;text-shadow:0 2px #06152f}
+.starter-promo-skin-copy span{padding:2px 6px;border:1px solid #ffe486;border-radius:5px;background:#211c40dd;color:#ffe57e;font-size:clamp(7px,1.8vw,10px);font-weight:900;letter-spacing:1px}
+.starter-promo-skin-copy b{color:#ffe178;font-size:clamp(7px,1.8vw,10px);letter-spacing:1px}
+.starter-promo-skin-copy small{color:#d8f5ff;font-size:clamp(6px,1.55vw,9px);font-weight:800;letter-spacing:.45px;text-shadow:0 2px #06152f}
+.starter-promo-art-reward{position:absolute;z-index:2;right:8%;width:37%;display:grid;justify-items:center;line-height:1;text-align:center;text-shadow:0 2px #06152f}
+.starter-promo-art-reward strong{font-size:clamp(17px,5.2vw,30px);color:#fff}
+.starter-promo-art-reward small{margin-top:4px;color:#bdeaff;font-size:clamp(7px,1.8vw,11px);font-weight:900;letter-spacing:1.5px}
+.starter-promo-art-coins{top:27.2%}
+.starter-promo-art-gems{top:41.5%}
+.starter-promo-art-boosts{top:56.1%;right:10%;width:31%}
+.starter-promo-art-boosts strong{color:#f4d7ff;font-size:clamp(16px,4.7vw,27px)}
+.starter-promo-art-boosts small{color:#e1c1ff}
+.starter-promo-footer{position:absolute;z-index:2;left:6.5%;right:6.5%;bottom:15.2%;display:flex;align-items:end;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px solid #8de5ff55;text-shadow:0 2px #06152f}
+.starter-promo-timer small,.starter-promo-timer strong,.starter-promo-price del,.starter-promo-price strong{display:block}
+.starter-promo-timer small{color:#b2e8ff;font-size:clamp(7px,1.8vw,11px);letter-spacing:1px}
+.starter-promo-timer strong{color:#fff1a3;font-size:clamp(16px,4.6vw,27px);line-height:1.05;letter-spacing:1px}
+.starter-promo-price{text-align:right}
+.starter-promo-price del{color:#b2c4d7;font-size:clamp(8px,1.9vw,12px)}
+.starter-promo-price strong{color:#ffe36c;font-size:clamp(24px,7.2vw,40px);line-height:.92;text-shadow:0 3px #76420b,0 0 15px #ffda4e88}
+.starter-promo-cta{position:absolute;z-index:3;left:6.5%;right:6.5%;bottom:4.4%;width:87%;min-height:7.1%;border:1px solid #ffe899;border-radius:15px;background:linear-gradient(180deg,#38e0ff,#087fc8 55%,#07558f);box-shadow:inset 0 2px #e8ffffaa,0 5px #031d49,0 0 20px #37dfff66;color:#fff;font:900 clamp(13px,4vw,22px) 'Baloo 2',system-ui,sans-serif;letter-spacing:1px;text-shadow:0 2px #07345f;cursor:pointer;transition:transform .14s ease,filter .14s ease,box-shadow .14s ease}
+.starter-promo-cta:hover{filter:brightness(1.12);box-shadow:inset 0 2px #e8ffffaa,0 5px #031d49,0 0 28px #37dfffbb}
+.starter-promo-cta:active{transform:translateY(3px) scale(.985)}
+.starter-promo-cta:disabled{cursor:not-allowed;filter:grayscale(.4) brightness(.7)}
+.starter-promo-compact{aspect-ratio:944 / 1420}
+.starter-promo-compact .starter-promo-heading h3{font-size:clamp(17px,4.8vw,26px)}
+.starter-promo-compact .starter-promo-footer{bottom:15.5%}
+@media(max-width:360px){.starter-promo{border-radius:21px}.starter-promo-heading h3{font-size:20px}.starter-promo-art-reward strong{font-size:18px}.starter-promo-price strong{font-size:28px}.starter-promo-cta{font-size:15px}}

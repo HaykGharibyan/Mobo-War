@@ -1,0 +1,2 @@
+export type GameEvent='BATTLE_STARTED'|'BATTLE_PROGRESS'|'VICTORY'|'DEFEAT'; type Handler=(payload?:unknown)=>void; const handlers=new Map<GameEvent,Set<Handler>>();
+export const GameEventBus={on(event:GameEvent,handler:Handler){if(!handlers.has(event))handlers.set(event,new Set());handlers.get(event)!.add(handler);return()=>handlers.get(event)?.delete(handler)},emit(event:GameEvent,payload?:unknown){handlers.get(event)?.forEach(handler=>handler(payload))}};

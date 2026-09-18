@@ -1,0 +1,2 @@
+import { ECONOMY } from '../game/config/economy';
+export const RewardsService={battleCoins(level:number,stars=3){const safeLevel=Math.max(1,Math.floor(level)),boss=safeLevel%10===0?2.2:1,growth=Math.pow(ECONOMY.battleRewardGrowth,safeLevel-1),base=ECONOMY.baseBattleCoins+stars*ECONOMY.starBonus;return Math.round(base*growth*boss)},battleGems(level:number){return level%10===0?20+Math.floor(level/20)*5:level%5===0?8:Math.max(2,Math.floor(level/10)+1)}};

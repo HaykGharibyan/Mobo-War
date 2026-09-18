@@ -1,0 +1,206 @@
+/* Shared mobile commerce presentation. Keep the catalogue usable on small
+   screens while leaving the battle and result screens untouched. */
+.screen-shop .screen-frame,
+.screen-pass .screen-frame {
+  overflow: hidden;
+}
+
+.screen-shop .shop,
+.screen-shop .booster-store {
+  min-height: 0;
+  flex: 1 1 auto;
+  align-content: start;
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.screen-shop .shop::-webkit-scrollbar,
+.screen-shop .booster-store::-webkit-scrollbar {
+  display: none;
+}
+
+.screen-pass .pass-scroll-region {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.screen-pass .pass-scroll-region::-webkit-scrollbar {
+  display: none;
+}
+
+.screen-pass .pass-scroll-region .battle-pass-list {
+  flex: 0 0 auto;
+  min-height: max-content;
+  overflow: visible;
+}
+
+.screen-pass .pass-banner,
+.screen-pass .pass-columns-head {
+  flex: 0 0 auto;
+}
+
+.screen-shop .tabs span {
+  flex: 0 0 auto;
+  min-width: 68px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: #b9ddf5;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.screen-shop .tabs .selected {
+  color: #fff;
+  background: linear-gradient(#28bdf5, #0878d4);
+  box-shadow: inset 0 1px #d0f8ff88, 0 2px #043b78;
+}
+
+/* The Shop now has three tabs; let them fill the bar evenly. */
+.screen-shop .tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.screen-shop .tabs span {
+  min-width: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+}
+
+.screen-shop .shop {
+  padding-bottom: 22px;
+}
+
+.screen-shop .shop {
+  gap: 10px;
+}
+
+.screen-shop .shop > .shopcard {
+  min-height: 108px;
+}
+
+.screen-shop .booster-store {
+  gap: 10px;
+  padding-bottom: 22px;
+}
+
+.screen-shop .shop-section-title {
+  margin: 2px 3px 0;
+  padding: 3px 2px 1px;
+}
+
+.screen-shop .shop-section-title b {
+  font-size: 16px;
+  text-shadow: 0 2px #09244f;
+}
+
+.screen-shop .shop-section-title small {
+  font-size: 10px;
+}
+
+.screen-shop .shopcard,
+.screen-shop .booster-shop-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.screen-shop .shopcard::after,
+.screen-shop .booster-shop-card::after {
+  content: '';
+  position: absolute;
+  inset: 0 48% 0 -35%;
+  pointer-events: none;
+  background: linear-gradient(105deg, #fff2, transparent 70%);
+  transform: skewX(-18deg);
+}
+
+.screen-shop .shopcard:active,
+.screen-shop .booster-shop-card:active {
+  transform: translateY(2px) scale(.995);
+  filter: brightness(.96);
+}
+
+.screen-shop .shopcard > *,
+.screen-shop .booster-shop-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.screen-shop .shopcard .gamebutton,
+.screen-shop .booster-shop-card button {
+  min-height: 42px;
+}
+
+.screen-shop .shop-pack {
+  min-height: 122px;
+  padding: 11px;
+}
+
+.screen-shop .shop-pack-copy > b {
+  font-size: 17px;
+  letter-spacing: .3px;
+}
+
+.screen-shop .shop-pack-copy > p {
+  margin-top: 7px;
+  color: #fff4ad;
+  font-size: 13px;
+  text-shadow: 0 1px #4e2b08;
+}
+
+.screen-shop .shop-pack-icon {
+  font-size: 53px !important;
+}
+
+.screen-pass .pass-banner {
+  position: relative;
+  overflow: hidden;
+  margin-top: 3px;
+  box-shadow: inset 0 1px #d2f7ff55, 0 5px #042b57;
+}
+
+.screen-pass .pass-banner::after {
+  content: '✦  ✧  ✦';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: #fff19a88;
+  font-size: 18px;
+  letter-spacing: 6px;
+  pointer-events: none;
+}
+
+.screen-pass .pass-reward-card {
+  min-height: 108px;
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.screen-pass .pass-reward-card:has(button:active) {
+  transform: translateY(2px);
+  filter: brightness(.94);
+}
+
+@media (max-width: 360px) {
+  .screen-shop .tabs span {
+    min-width: 62px;
+    padding-inline: 7px;
+  }
+
+  .screen-shop .shop-pack {
+    min-height: 112px;
+  }
+
+}

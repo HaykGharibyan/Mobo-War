@@ -1,0 +1,11 @@
+{
+  "name": "Mobo War",
+  "short_name": "Mobo War",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06234d",
+  "theme_color": "#06234d",
+  "description": "Mobo War — bright casual robot crowd battle game.",
+  "icons": [{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "mobo-war",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc --noEmit",
+    "test:battle": "powershell -ExecutionPolicy Bypass -File scripts/test-battle.ps1",
+    "cap:sync": "pnpm build && npx cap sync",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "latest",
+    "@capacitor/haptics": "^8.0.2",
+    "@vitejs/plugin-react": "latest",
+    "phaser": "^3.90.0",
+    "qrcode": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zustand": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest",
+    "@types/qrcode": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}

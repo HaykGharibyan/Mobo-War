@@ -1,0 +1,5 @@
+.screen-result .war-result.won.has-booster-choice .victory-bottom{margin-top:auto!important}.screen-result .war-result.won.has-booster-choice .booster-choice{margin-top:24px!important}.screen-result .war-result.won.has-booster-choice .war-result-buttons{margin-top:12px}.screen-result .war-result.won.has-booster-choice .booster-choice{box-sizing:border-box}@media(max-height:700px){.screen-result .war-result.won.has-booster-choice .booster-choice{margin-top:21px!important}}
+/* Raster reward cards flip instead of swapping an emoji placeholder. */
+.booster-card{perspective:500px;transform-style:preserve-3d}
+.booster-card.revealed{animation:booster-reveal-png .46s cubic-bezier(.18,.86,.22,1.15)}
+@keyframes booster-reveal-png{from{transform:rotateY(-76deg) scale(.78);opacity:.25}to{transform:rotateY(0) scale(1);opacity:1}}
