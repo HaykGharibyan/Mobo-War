@@ -3,8 +3,6 @@
 .starter-offer-modal-shell::-webkit-scrollbar{display:none}
 .starter-offer-modal-eyebrow{position:absolute;top:5px;left:0;right:0;text-align:center;color:#b9eeff;font-size:10px;font-weight:900;letter-spacing:2px;text-shadow:0 2px #061b3c}
 .starter-offer-modal-card{width:100%;box-sizing:border-box}
-.starter-offer-close{position:absolute;z-index:4;top:0;right:4px;display:grid;place-items:center;width:34px;height:34px;border:1px solid #8ddfff;border-radius:50%;background:#092b58ee;box-shadow:inset 0 1px #fff7,0 4px 12px #0008;color:#fff;font:700 25px/1 system-ui;cursor:pointer}
-.starter-offer-close:active{transform:scale(.94)}
 .starter-offer-dismiss{display:block;margin:10px auto 0;border:0;background:transparent;color:#a9ddf8;font:800 11px 'Baloo 2',system-ui,sans-serif;letter-spacing:2px;cursor:pointer;text-shadow:0 2px #03152f}
 .starter-offer-dismiss:hover{color:#fff}
 .lobby-starter-offer{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1px;border-color:#ffe082;border-radius:14px;background:radial-gradient(circle at 50% 28%,#27658dcc 0%,#162f5ed9 44%,#171638f2 100%);box-shadow:inset 0 1px #fff9,0 4px 0 #1c102dcc,0 0 17px #ffc94d88,0 0 30px #35cfff33;color:#fff;font-family:'Baloo 2',system-ui,sans-serif;cursor:pointer;overflow:visible;animation:starter-offer-pulse 2.8s ease-in-out infinite}

@@ -1,19 +1,11 @@
 export type PaidProductId=
-  | 'shop-mixed-small'
-  | 'shop-mixed-medium'
-  | 'shop-mixed-large'
-  | 'shop-gems-small'
-  | 'shop-gems-medium'
-  | 'shop-gems-large'
-  | 'shop-coins-small'
-  | 'shop-coins-medium'
-  | 'shop-coins-large'
-  | 'shop-daily-small'
-  | 'shop-daily-medium'
-  | 'shop-remove-ads'
-  | 'starter-royal-pack'
-  | 'shop-royal-pack'
-  | 'battle-pass-premium';
+  | 'com.hayk.mobowar.gems_100'
+  | 'com.hayk.mobowar.gems_300'
+  | 'com.hayk.mobowar.gems_900'
+  | 'com.hayk.mobowar.combo_tier1'
+  | 'com.hayk.mobowar.combo_tier2'
+  | 'com.hayk.mobowar.combo_tier3'
+  | 'com.hayk.mobowar.promo_starter_pack';
 
 export type StoreProduct={
   id:PaidProductId;
@@ -23,21 +15,13 @@ export type StoreProduct={
 };
 
 export const STORE_PRODUCTS:Record<PaidProductId,StoreProduct>={
-  'shop-mixed-small':{id:'shop-mixed-small',priceUsd:.99,title:'Small Supply',fulfillment:'level-scaled-mixed'},
-  'shop-mixed-medium':{id:'shop-mixed-medium',priceUsd:1.99,title:'Commander Pack',fulfillment:'level-scaled-mixed'},
-  'shop-mixed-large':{id:'shop-mixed-large',priceUsd:5.99,title:'War Chest',fulfillment:'level-scaled-mixed'},
-  'shop-gems-small':{id:'shop-gems-small',priceUsd:.99,title:'Gem Pouch',fulfillment:'level-scaled-gems'},
-  'shop-gems-medium':{id:'shop-gems-medium',priceUsd:1.99,title:'Gem Cache',fulfillment:'level-scaled-gems'},
-  'shop-gems-large':{id:'shop-gems-large',priceUsd:4.99,title:'Gem Vault',fulfillment:'level-scaled-gems'},
-  'shop-coins-small':{id:'shop-coins-small',priceUsd:.99,title:'Coin Stack',fulfillment:'level-scaled-coins'},
-  'shop-coins-medium':{id:'shop-coins-medium',priceUsd:4.99,title:'Coin Crate',fulfillment:'level-scaled-coins'},
-  'shop-coins-large':{id:'shop-coins-large',priceUsd:9.99,title:'Coin Fortune',fulfillment:'level-scaled-coins'},
-  'shop-daily-small':{id:'shop-daily-small',priceUsd:.99,title:'Daily Deal',fulfillment:'level-scaled-daily'},
-  'shop-daily-medium':{id:'shop-daily-medium',priceUsd:4.99,title:'Commander Deal',fulfillment:'level-scaled-daily'},
-  'shop-remove-ads':{id:'shop-remove-ads',priceUsd:2.99,title:'Remove Ads',fulfillment:'remove-ads'},
-  'starter-royal-pack':{id:'starter-royal-pack',priceUsd:2.99,title:'Royal Starter Pack',fulfillment:'starter-pack'},
-  'shop-royal-pack':{id:'shop-royal-pack',priceUsd:14.99,title:'Black Gold Set',fulfillment:'starter-pack'},
-  'battle-pass-premium':{id:'battle-pass-premium',priceUsd:6.99,title:'Premium Battle Pass',fulfillment:'battle-pass-premium'}
+  'com.hayk.mobowar.gems_100':{id:'com.hayk.mobowar.gems_100',priceUsd:.99,title:'Gem Pouch',fulfillment:'level-scaled-gems'},
+  'com.hayk.mobowar.gems_300':{id:'com.hayk.mobowar.gems_300',priceUsd:1.99,title:'Gem Cache',fulfillment:'level-scaled-gems'},
+  'com.hayk.mobowar.gems_900':{id:'com.hayk.mobowar.gems_900',priceUsd:4.99,title:'Gem Vault',fulfillment:'level-scaled-gems'},
+  'com.hayk.mobowar.combo_tier1':{id:'com.hayk.mobowar.combo_tier1',priceUsd:.99,title:'Small Supply',fulfillment:'level-scaled-mixed'},
+  'com.hayk.mobowar.combo_tier2':{id:'com.hayk.mobowar.combo_tier2',priceUsd:1.99,title:'Commander Pack',fulfillment:'level-scaled-mixed'},
+  'com.hayk.mobowar.combo_tier3':{id:'com.hayk.mobowar.combo_tier3',priceUsd:4.99,title:'War Chest',fulfillment:'level-scaled-mixed'},
+  'com.hayk.mobowar.promo_starter_pack':{id:'com.hayk.mobowar.promo_starter_pack',priceUsd:2.99,title:'Royal Starter Pack',fulfillment:'starter-pack'}
 };
 
 export type PurchaseResult={status:'not-configured';productId:PaidProductId;transactionId:string};

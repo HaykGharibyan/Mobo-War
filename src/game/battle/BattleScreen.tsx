@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import Phaser from 'phaser';
 import { App as CapacitorApp } from '@capacitor/app';
 import { ArenaScene, type ArenaOptions } from '../phaser/ArenaScene';
@@ -9,6 +9,7 @@ import { useBoosterInventory } from './BoosterInventoryStore';
 import './booster-tutorial.css';
 import './booster-battle-art.css';
 import boosterRewardsArt from '../../assets/booster-rewards-art.webp';
+import battleAimCrosshair from '../../assets/battle-aim-crosshair.png';
 import { getWorldByLevel } from '../worlds/WorldConfig';
 import { getPlayerSkinArt } from './PlayerSkinAssets';
 import { CurrencyValue } from '../../ui/Currency';
@@ -27,7 +28,7 @@ export function BattleScreen({loadout,coins,sfx,checkpoint,onEnd,onExit,onRetry}
   const parent=useRef<HTMLDivElement>(null),gameRef=useRef<Phaser.Game|null>(null);
   const boosters=useBoosterInventory(state=>state.inventory);
   const bossLevel=loadout.level%10===0;
-  const [snapshot,setSnapshot]=useState<BattleSnapshot|null>(null),[arenaReady,setArenaReady]=useState(false),[paused,setPaused]=useState(false),[error,setError]=useState(false),[freezeHint,setFreezeHint]=useState(()=>loadout.level===1&&localStorage.getItem('mobo-freeze-tutorial-v1')!=='true'),[directionHint,setDirectionHint]=useState(()=>loadout.level===1&&localStorage.getItem('mobo-direction-tutorial-v1')!=='true'),[freezeNotice,setFreezeNotice]=useState(false);
+  const [snapshot,setSnapshot]=useState<BattleSnapshot|null>(null),[arenaReady,setArenaReady]=useState(false),[paused,setPaused]=useState(false),[error,setError]=useState(false),[aimPointer,setAimPointer]=useState<{x:number;y:number}|null>(null),[freezeHint,setFreezeHint]=useState(()=>loadout.level===1&&localStorage.getItem('mobo-freeze-tutorial-v1')!=='true'),[directionHint,setDirectionHint]=useState(()=>loadout.level===1&&localStorage.getItem('mobo-direction-tutorial-v1')!=='true'),[freezeNotice,setFreezeNotice]=useState(false);
   const callbacks=useRef({onEnd});callbacks.current={onEnd};
   useEffect(()=>{BattleAudioSystem.start();BattleAudioSystem.setEnabled(sfx);return()=>BattleAudioSystem.stop()},[]);
   useEffect(()=>{BattleAudioSystem.setEnabled(sfx)},[sfx]);
@@ -53,8 +54,10 @@ export function BattleScreen({loadout,coins,sfx,checkpoint,onEnd,onExit,onRetry}
     return()=>{mounted=false;disposed=true;document.removeEventListener('visibilitychange',hide);void appStateListener?.remove();gameRef.current?.destroy(true);gameRef.current=null};
   },[]);
   const boost=(type:Booster)=>{if(paused||!snapshot?.boosters[type])return;const scene=gameRef.current?.scene.getScene('mobo-arena') as ArenaScene|undefined;if(scene?.useBooster(type)){useBoosterInventory.getState().spend(type);if(type==='freeze'&&freezeHint){localStorage.setItem('mobo-freeze-tutorial-v1','true');setFreezeHint(false);setFreezeNotice(true);window.setTimeout(()=>setFreezeNotice(false),1800)}}};
+  const updateAimPointer=(event:ReactPointerEvent<HTMLDivElement>)=>{const rect=event.currentTarget.getBoundingClientRect();setAimPointer({x:event.clientX-rect.left,y:event.clientY-rect.top})};
+  const hideAimPointer=()=>setAimPointer(null);
   const world=getWorldByLevel(loadout.level);
-  return <section className={`war-screen battle-world-${world.key} ${arenaReady?'arena-ready':''}`} aria-label="Battlefield"><div className="war-viewport"><div className="war-canvas" ref={parent}/>{!arenaReady&&<div className="battle-loading-cover" aria-label="Preparing battlefield"><main><span>MISSION DEPLOYMENT</span><div className="battle-loading-unit"><img src={getPlayerSkinArt((['basic','runner','tank'] as const)[loadout.unitIndex]||'basic',loadout.skin||'default','back')} alt=""/></div><h1>{world.name}</h1><p>Preparing your squad for Level {loadout.level}</p><div className="battle-loading-bar"><i/></div><b>DEPLOYING BATTLEFIELD</b></main><aside><strong>COMMANDER TIP</strong><span>Your cannon fires automatically</span><small>Swipe left or right to guide your army into position.</small></aside></div>}
+  return <section className={`war-screen battle-world-${world.key} ${arenaReady?'arena-ready':''}`} aria-label="Battlefield"><div className="war-viewport" onPointerEnter={updateAimPointer} onPointerMove={updateAimPointer} onPointerDown={updateAimPointer} onPointerUp={hideAimPointer} onPointerCancel={hideAimPointer} onPointerLeave={hideAimPointer}><div className="war-canvas" ref={parent}/>{aimPointer&&arenaReady&&!paused&&!error&&<img className="battle-aim-pointer" src={battleAimCrosshair} alt="" aria-hidden="true" style={{left:aimPointer.x,top:aimPointer.y}}/>}{!arenaReady&&<div className="battle-loading-cover" aria-label="Preparing battlefield"><main><span>MISSION DEPLOYMENT</span><div className="battle-loading-unit"><img src={getPlayerSkinArt((['basic','runner','tank'] as const)[loadout.unitIndex]||'basic',loadout.skin||'default','back')} alt=""/></div><h1>{world.name}</h1><p>Preparing your squad for Level {loadout.level}</p><div className="battle-loading-bar"><i/></div><b>DEPLOYING BATTLEFIELD</b></main><aside><strong>COMMANDER TIP</strong><span>Your cannon fires automatically</span><small>Swipe left or right to guide your army into position.</small></aside></div>}
     {arenaReady&&<><header className={`war-hud ${bossLevel?'boss-hud':''}`}><div className="war-top"><button aria-label="Pause battle" onClick={()=>pause(true)}>Ⅱ</button><div><strong>Level {loadout.level}</strong></div><CurrencyValue kind="coin" value={coins.toLocaleString()} className="war-coins"/></div>
     <div className="war-progress" role="progressbar" aria-label="Enemy fortress HP" aria-valuenow={Math.round((snapshot?.progress||0)*100)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${(snapshot?.progress||0)*100}%`}}/></div></header>
     <div className="war-booster-rail"><div className="war-boosters">{(['freeze','army','blast'] as const).map((type,i)=><button key={type} disabled={paused||!snapshot?.boosters[type]} aria-label={`${type} booster`} onClick={()=>boost(type)}><span className={`war-booster-art booster-art-${type}`} style={{backgroundImage:`url(${boosterRewardsArt})`}} aria-hidden="true"/><small>{['FREEZE','+7 BOTS','BLAST'][i]}</small><b>{snapshot?.boosters[type]??0}</b></button>)}</div>{freezeHint&&<div className="booster-tutorial"><b>FREEZE BOOST</b><span>Tap Freeze to stop enemies for 2 seconds</span><i>›</i></div>}</div>

@@ -41,6 +41,8 @@ import enemyLavaMiniBoss from '../../assets/enemy-lava-miniBoss.webp';
 import enemyLavaBoss from '../../assets/enemy-lava-boss.webp';
 type EnemyVisualKind='basic'|'fast'|'tank'|'miniBoss'|'boss';
 type BotMotion={x:number;y:number;phase:number;heading:number};
+type WorldParticleFlow='fall'|'rise'|'across';
+type WorldParticle={shape:Phaser.GameObjects.Shape;flow:WorldParticleFlow;speed:number;drift:number;sway:number;spin:number;phase:number;opacity:number;scale:number;style:'leaves'|'snow'|'mist'|'dust'|'ash'};
 type EnemySkinSet=Record<EnemyVisualKind,string>;
 const ENEMY_TEXTURE_KEYS:Record<string,EnemySkinSet>={
   green:{basic:'enemy-skin-basic',fast:'enemy-skin-fast',tank:'enemy-skin-tank',miniBoss:'enemy-skin-miniBoss',boss:'enemy-skin-boss'},
@@ -83,7 +85,7 @@ export class BattleRenderer {
   private eliteGlows:Phaser.GameObjects.Arc[]=[];
   private readonly botMotion=new Map<number,BotMotion>();
   private fx:{shape:Phaser.GameObjects.Arc;life:number;duration:number}[]=[];
-  private worldParticles:{shape:Phaser.GameObjects.Arc;speed:number;drift:number}[]=[];
+  private worldParticles:WorldParticle[]=[];
   private weaponBase:Phaser.GameObjects.Image;private weaponTurret:Phaser.GameObjects.Image;private muzzleFlash:Phaser.GameObjects.Arc;private fortress:Phaser.GameObjects.Image;
   private recoil=0;private impact=0;private soundAt=0;private gateAt=0;
   private readonly partsKey:string;private readonly projectileKey:string;private readonly weaponIndex:number;private readonly weaponKind:WeaponRigKind;private flashLife=0;
@@ -106,8 +108,7 @@ export class BattleRenderer {
     }
     for(let i=0;i<model.shots.length;i++)this.shots.push(scene.add.image(0,0,this.projectileKey).setDisplaySize(this.weaponIndex===2?28:16,this.weaponIndex===2?28:32).setVisible(false));
     for(let i=0;i<60;i++)this.fx.push({shape:scene.add.circle(0,0,3,0xffdb51).setVisible(false).setDepth(900),life:0,duration:0});
-    const particleColors={leaves:[0xa8e36b,0x75c957,0xd7f4a0],snow:[0xffffff,0xd8f8ff,0x9eeaff],mist:[0xc694ff,0x8cc8ff,0xf0caff],dust:[0xe9bd7b,0xd99057,0xffdc9a],ash:[0xff8c45,0xffc15c,0x9a7c86]}[model.config.world.particleStyle];
-    for(let i=0;i<18;i++){const shape=scene.add.circle(40+Math.random()*310,40+Math.random()*690,1.5+Math.random()*2.5,particleColors[i%particleColors.length],.3+Math.random()*.35).setDepth(700);this.worldParticles.push({shape,speed:8+Math.random()*18,drift:(Math.random()-.5)*10})}
+    this.createWorldParticles();
     this.weaponBase=scene.add.image(195,690,`rig-hull-${this.weaponKind}`).setDisplaySize(110,76).setDepth(750);
     this.weaponTurret=scene.add.image(200,720,`rig-turret-${this.weaponKind}`).setOrigin(.5,.79).setDisplaySize(105,145).setDepth(751);
     const flashColor=this.weaponIndex===2?0xee9aff:this.weaponIndex===1?0xffc36c:0xa0ffff;
@@ -116,6 +117,67 @@ export class BattleRenderer {
       makeWeaponSpriteArt(scene,this.partsKey,this.weaponKind);
       this.weaponBase.setTexture(`battle-weapon-${this.weaponKind}-base`).setOrigin(.5,.5).setDisplaySize(115,154);
       this.weaponTurret.setTexture(`battle-weapon-${this.weaponKind}-turret`).setOrigin(.5,.79).setDisplaySize(115,154);
+    }
+  }
+  private createWorldParticles(){
+    const style=this.model.config.world.particleStyle;
+    const colors={
+      leaves:[0x9cda57,0xefbd54,0xd97843],
+      snow:[0xffffff,0xd8f8ff,0x9eeaff],
+      mist:[0xdc90ff,0x94baff,0xf4c9ff],
+      dust:[0xf0bd72,0xc97840,0xffdc9a],
+      ash:[0xffb35c,0xff6438,0xc29386]
+    }[style];
+    const count={leaves:14,snow:26,mist:13,dust:15,ash:19}[style];
+    for(let index=0;index<count;index++){
+      const phase=Math.random()*Math.PI*2;
+      const color=colors[index%colors.length];
+      const opacity=style==='snow'?.42+Math.random()*.32:style==='mist'?.16+Math.random()*.2:.26+Math.random()*.28;
+      let shape:Phaser.GameObjects.Shape;
+      if(style==='leaves')shape=this.scene.add.ellipse(0,0,4+Math.random()*2.5,7+Math.random()*4,color,opacity).setAngle(Math.random()*180);
+      else if(style==='dust')shape=this.scene.add.ellipse(0,0,8+Math.random()*10,1.8+Math.random()*2.5,color,opacity).setAngle(-12+Math.random()*24);
+      else if(style==='mist')shape=this.scene.add.circle(0,0,1.6+Math.random()*2.2,color,opacity);
+      else shape=this.scene.add.circle(0,0,style==='snow'?1+Math.random()*1.6:1.2+Math.random()*2.3,color,opacity);
+      const flow:WorldParticleFlow=style==='ash'||style==='mist'?'rise':style==='dust'?'across':'fall';
+      const speed=style==='dust'?24+Math.random()*20:style==='snow'?9+Math.random()*17:style==='mist'?5+Math.random()*10:style==='ash'?18+Math.random()*28:15+Math.random()*22;
+      const drift=style==='dust'?(Math.random()-.5)*5:(Math.random()-.5)*(style==='leaves'?30:style==='snow'?13:18);
+      const particle:WorldParticle={shape,flow,speed,drift,sway:1.1+Math.random()*2.3,spin:(Math.random()-.5)*(style==='leaves'?150:style==='dust'?34:0),phase,opacity,scale:.82+Math.random()*.32,style};
+      shape.setDepth(4);
+      this.worldParticles.push(particle);
+      this.resetWorldParticle(particle,true);
+    }
+  }
+  private resetWorldParticle(particle:WorldParticle,initial=false){
+    const x=26+Math.random()*338;
+    if(particle.flow==='across')particle.shape.setPosition(initial?-22+Math.random()*430:-18,60+Math.random()*650);
+    else if(particle.flow==='rise')particle.shape.setPosition(x,initial?28+Math.random()*740:798);
+    else particle.shape.setPosition(x,initial?18+Math.random()*760:12);
+    particle.shape.setScale(particle.scale).setAlpha(particle.opacity).setVisible(true);
+    if(particle.style==='leaves')particle.shape.setAngle(Math.random()*180);
+  }
+  private updateWorldParticles(dt:number,now:number){
+    for(const particle of this.worldParticles){
+      const wave=Math.sin(now*particle.sway+particle.phase);
+      if(particle.flow==='fall'){
+        particle.shape.y+=particle.speed*dt;
+        particle.shape.x+=(particle.drift+wave*(particle.style==='leaves'?18:6))*dt;
+        if(particle.shape.y>792) this.resetWorldParticle(particle);
+      }else if(particle.flow==='rise'){
+        particle.shape.y-=particle.speed*dt;
+        particle.shape.x+=(particle.drift+wave*(particle.style==='mist'?8:11))*dt;
+        if(particle.shape.y<8) this.resetWorldParticle(particle);
+      }else{
+        particle.shape.x+=particle.speed*dt;
+        particle.shape.y+=(particle.drift+wave*3)*dt;
+        if(particle.shape.x>408) this.resetWorldParticle(particle);
+      }
+      if(particle.flow!=='across'){
+        if(particle.shape.x<12)particle.shape.x=382;
+        if(particle.shape.x>382)particle.shape.x=12;
+      }
+      if(particle.style==='leaves'||particle.style==='dust')particle.shape.setAngle(particle.shape.angle+particle.spin*dt);
+      const pulse=particle.style==='mist'?1+wave*.22:particle.style==='snow'?1+wave*.08:1+wave*.12;
+      particle.shape.setScale(particle.scale*pulse).setAlpha(Math.max(.08,particle.opacity*(.72+Math.abs(wave)*.28)));
     }
   }
   effect:Effect=(kind,x,y,team)=>{
@@ -138,7 +200,7 @@ export class BattleRenderer {
     if(this.sound&&this.scene.time.now-this.soundAt>120){this.soundAt=this.scene.time.now;AudioManager.play(kind,'sfx')}
   };
   update(dt:number){const now=this.model.time;
-    for(const p of this.worldParticles){p.shape.y+=p.speed*dt;p.shape.x+=p.drift*dt;if(p.shape.y>785){p.shape.y=35;p.shape.x=40+Math.random()*310}if(p.shape.x<35)p.shape.x=350;if(p.shape.x>355)p.shape.x=40;p.shape.setAlpha(.2+Math.sin(now*1.7+p.speed)*.12)}
+    this.updateWorldParticles(dt,now);
     const playerKind=(['basic','runner','tank'] as const)[this.model.loadout.unitIndex]||'basic',skin=this.model.loadout.skin||'default',enemySkin=this.model.config.world.key;
     for(let i=0;i<this.bots.length;i++){
       const u=this.model.units[i],sprite=this.bots[i],shadow=this.shadows[i],eliteGlow=this.eliteGlows[i];

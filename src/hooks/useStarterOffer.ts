@@ -4,6 +4,7 @@ import {
   markStarterOfferPurchased,
   markStarterOfferShown,
   readStarterOffer,
+  syncStarterOfferClock,
   type StarterOfferSnapshot,
 } from '../services/StarterOfferService';
 
@@ -18,6 +19,7 @@ export function useStarterOffer(): StarterOfferSnapshot & {
 
   useEffect(() => {
     refresh();
+    void syncStarterOfferClock().then(() => refresh());
     const timer = window.setInterval(refresh, 1000);
     return () => window.clearInterval(timer);
   }, [refresh]);

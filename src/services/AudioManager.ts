@@ -27,8 +27,11 @@ let rapidImpactSound:HTMLAudioElement|null=null;
 let pulseImpactSound:HTMLAudioElement|null=null;
 let battleFadeTimer:ReturnType<typeof setInterval>|null=null;
 let bossFadeTimer:ReturnType<typeof setInterval>|null=null;
-let musicEnabled=true;
-let sfxEnabled=true;
+const readAudioPreference=(key:'music'|'sfx')=>{
+  try{return localStorage.getItem(`mobo-${key}`)!=='false'}catch{return true}
+};
+let musicEnabled=readAudioPreference('music');
+let sfxEnabled=readAudioPreference('sfx');
 let activeMusicId:string|null=null;
 let musicWatchdog:ReturnType<typeof setInterval>|null=null;
 
@@ -164,6 +167,13 @@ function getPulseImpactSound(){
   return pulseImpactSound;
 }
 
+function stopSfxTracks(){
+  BattleAudioSystem.stopVoices();
+  [defeatSound,victorySound,bossDeathSound,bossSpawnSound,plasmaImpactSound,rapidImpactSound,pulseImpactSound,uiClickSound].forEach(track=>{
+    if(track){track.pause();track.currentTime=0}
+  });
+}
+
 export const AudioManager:AudioProvider={
   play(id,category){
     if(category==='music'&&id==='lobby_theme'&&musicEnabled){
@@ -263,7 +273,10 @@ export const AudioManager:AudioProvider={
         bossMusic.volume=0.1;
       }
     }
-    if(category==='sfx')sfxEnabled=enabled;
+    if(category==='sfx'){
+      sfxEnabled=enabled;
+      if(!enabled)stopSfxTracks();
+    }
     if(import.meta.env.DEV)console.info(`[audio:${category}] enabled=${enabled}`);
   },
   stop(category){
@@ -280,11 +293,7 @@ export const AudioManager:AudioProvider={
       if(bossMusic){bossMusic.pause();bossMusic.currentTime=0;bossMusic.volume=0.1;}
     }
     if(category==='sfx'){
-      BattleAudioSystem.stopVoices();
-      if(defeatSound){defeatSound.pause();defeatSound.currentTime=0;}
-      if(victorySound){victorySound.pause();victorySound.currentTime=0;}
-      if(bossDeathSound){bossDeathSound.pause();bossDeathSound.currentTime=0;}
-      if(bossSpawnSound){bossSpawnSound.pause();bossSpawnSound.currentTime=0;}
+      stopSfxTracks();
     }
     if(category==='ui'&&uiClickSound){uiClickSound.pause();uiClickSound.currentTime=0;}
   },

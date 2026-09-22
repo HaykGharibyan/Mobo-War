@@ -8,6 +8,7 @@ export type BattleSnapshot={army:number;enemies:number;baseHp:number;baseMax:num
 export type BattleOutcome={id:string;level:number;result:'victory'|'defeat';stars:number;kills:number;seconds:number;challenge?:boolean};
 export type BattleCheckpoint={cannonX:number;aimAngle?:number;baseHp:number;playerHp:number;time:number;kills:number;wave:number;freezeUntil:number;spawnClock:number;shotClock:number;seed:number;nextUnitId:number;boosters:Record<Booster,number>;units:Unit[];shots:Shot[];gates?:GateDirectorCheckpoint};
 export type Effect=(kind:'spawn'|'shoot'|'hit'|'death'|'bossDeath'|'bossSpawn'|'gate'|'base'|'victory'|'defeat',x:number,y:number,team?:Team)=>void;
+const PLAYER_BASE_ATTACK_Y=FIELD.cannonY-30;
 
 export class BattleModel {
   readonly config; readonly units:Unit[]; readonly shots:Shot[];
@@ -71,7 +72,10 @@ export class BattleModel {
     if(this.result)return;this.time+=dt;this.spawnClock+=dt;this.shotClock+=dt;
     const weaponX=FIELD.width/2+5;
     let targetAngle=0,nearestShotTarget=Infinity;
-    for(const enemy of this.units)if(enemy.active&&enemy.team==='red'&&enemy.y<630){
+    // Keep targeting all living enemies, including those that have reached
+    // the player's base. Previously the y<630 cut-off made close enemies
+    // untargetable exactly when they became the most urgent threat.
+    for(const enemy of this.units)if(enemy.active&&enemy.team==='red'){
       const dx=enemy.x-weaponX,dy=720-enemy.y,angle=Math.atan2(dx,dy);
       const distance=dx*dx+dy*dy;
       if(distance<nearestShotTarget){nearestShotTarget=distance;targetAngle=angle}
@@ -79,7 +83,13 @@ export class BattleModel {
     this.aimAngle+=Math.max(-dt*3,Math.min(dt*3,targetAngle-this.aimAngle));
     if(this.wave<this.config.waves.length&&this.time>=this.config.waves[this.wave].at)this.emitWave();
     if(this.time<65&&this.spawnClock>=this.config.spawnInterval){this.spawnClock-=this.config.spawnInterval;this.spawn('blue',this.cannonX+(this.random()-.5)*25,650);this.effect('spawn',this.cannonX,660,'blue')}
-    if(this.shotClock>=this.config.shotInterval){this.shotClock=0;const muzzleDistance=[106,108,106][Math.max(0,Math.min(2,this.loadout.weaponIndex))];for(const s of this.shots)if(!s.active){s.active=true;s.x=weaponX+Math.sin(this.aimAngle)*muzzleDistance;s.y=720-Math.cos(this.aimAngle)*muzzleDistance;s.vx=Math.sin(this.aimAngle)*350;s.vy=-Math.cos(this.aimAngle)*350;this.effect('shoot',s.x,s.y);break}}
+    if(this.shotClock>=this.config.shotInterval){this.shotClock=0;const defaultMuzzleDistance=[106,108,106][Math.max(0,Math.min(2,this.loadout.weaponIndex))];
+      // The normal muzzle sits ahead of the cannon. For an enemy already
+      // close to the cannon that point would be past the target, so shorten
+      // the muzzle offset and let the projectile travel through the target.
+      const targetDistance=Number.isFinite(nearestShotTarget)?Math.sqrt(nearestShotTarget):Infinity;
+      const muzzleDistance=Math.min(defaultMuzzleDistance,Math.max(18,targetDistance-18));
+      for(const s of this.shots)if(!s.active){s.active=true;s.x=weaponX+Math.sin(this.aimAngle)*muzzleDistance;s.y=720-Math.cos(this.aimAngle)*muzzleDistance;s.vx=Math.sin(this.aimAngle)*350;s.vy=-Math.cos(this.aimAngle)*350;this.effect('shoot',s.x,s.y);break}}
     this.grid.clear();for(const u of this.units)if(u.active)this.grid.insert(u.id,u.x,u.y);
     for(const u of this.units){
       if(!u.active)continue;u.hit=Math.max(0,u.hit-dt);u.cooldown-=dt;
@@ -94,13 +104,20 @@ export class BattleModel {
         if(d<=u.attackRange){u.state='attack';if(u.cooldown<=0){u.cooldown=1/u.attackSpeed;this.hurt(target,u.damage)}}
         else{u.x+=dx/d*u.moveSpeed*dt;u.y+=dy/d*u.moveSpeed*dt}
       }else if(u.team==='blue'&&u.y<=FIELD.baseY+37){u.state='attack';if(u.cooldown<=0){u.cooldown=1/u.attackSpeed;this.baseHp=Math.max(0,this.baseHp-u.damage);this.effect('base',u.x,FIELD.baseY)}}
+      else if(u.team==='red'&&u.y>=PLAYER_BASE_ATTACK_Y){
+        // Enemies remain at our base and keep attacking on their cooldown.
+        // They are removed only when the player damages/kills them, matching
+        // the same persistent attack logic used against the enemy fortress.
+        u.y=PLAYER_BASE_ATTACK_Y;u.state='attack';
+        if(u.cooldown<=0){u.cooldown=1/u.attackSpeed;this.playerHp=Math.max(0,this.playerHp-u.damage);this.effect('base',u.x,FIELD.cannonY)}
+      }
       else{
         // A bot commits to the lane it spawned in. Steering the cannon only directs future reinforcements.
         if(u.team==='blue')u.x+=(u.laneX-u.x)*Math.min(1,dt*2.4);
         u.y+=(u.team==='blue'?-1:1)*u.moveSpeed*dt;
       }
       const road=roadBoundsAt(u.y);u.x=Math.max(road.min+10,Math.min(road.max-10,u.x+sx*dt*2));if(u.state==='run')u.y+=sy*dt;
-      if(u.team==='red'&&u.y>653){this.playerHp=Math.max(0,this.playerHp-(u.kind==='tank'?22:12)*(1-this.config.armorBonus));this.kill(u)}
+      if(u.team==='red'&&u.y>PLAYER_BASE_ATTACK_Y)u.y=PLAYER_BASE_ATTACK_Y;
     }
     for(const s of this.shots){if(!s.active)continue;s.x+=(s.vx||0)*dt;s.y+=(s.vy||-350)*dt;let hit:Unit|undefined;
       this.grid.visit(s.x,s.y,22,id=>{const u=this.units[id];if(!hit&&u.active&&u.team==='red'&&Math.abs(u.x-s.x)<16&&Math.abs(u.y-s.y)<20)hit=u});

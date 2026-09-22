@@ -12,6 +12,10 @@
 .starter-promo-skin-copy span{padding:2px 6px;border:1px solid #ffe486;border-radius:5px;background:#211c40dd;color:#ffe57e;font-size:clamp(7px,1.8vw,10px);font-weight:900;letter-spacing:1px}
 .starter-promo-skin-copy b{color:#ffe178;font-size:clamp(7px,1.8vw,10px);letter-spacing:1px}
 .starter-promo-skin-copy small{color:#d8f5ff;font-size:clamp(6px,1.55vw,9px);font-weight:800;letter-spacing:.45px;text-shadow:0 2px #06152f}
+.starter-promo-skin-row{position:absolute;z-index:2;top:63.8%;left:3%;width:50%;display:grid;gap:2px;justify-items:center;text-align:center;text-shadow:0 2px #06152f}
+.starter-promo-skin-row>small{color:#ffe178;font-size:clamp(6px,1.55vw,9px);font-weight:900;letter-spacing:.8px}
+.starter-promo-skin-row>div{display:flex;align-items:end;justify-content:center;width:100%;height:clamp(72px,20vw,130px);gap:0}
+.starter-promo-skin-row img{width:35%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 7px #000b) drop-shadow(0 0 11px #ffd95177)}
 .starter-promo-art-reward{position:absolute;z-index:2;right:8%;width:37%;display:grid;justify-items:center;line-height:1;text-align:center;text-shadow:0 2px #06152f}
 .starter-promo-art-reward strong{font-size:clamp(17px,5.2vw,30px);color:#fff}
 .starter-promo-art-reward small{margin-top:4px;color:#bdeaff;font-size:clamp(7px,1.8vw,11px);font-weight:900;letter-spacing:1.5px}
